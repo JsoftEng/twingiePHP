@@ -21,7 +21,7 @@ $app->get('/api/analytics/hashtag/{context}',
       $context = $args['context'];
       $analysisIn = json_decode(file_get_contents('http://mlapiplchldr/?hashtag={$context}'),true);
       $analysisOut = array(
-        'strength' => $analysisIn['strength']
+        'strength' => $analysisIn['strength'],
         'text' => $analysisIn['text']
       );
 
