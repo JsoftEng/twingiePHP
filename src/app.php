@@ -45,7 +45,7 @@ $app->match('/', function () use ($app) {
     ));
 });
 
-// Handle the add page
+// Handle the hashtag request
 $app->match('/hashtag', function (Request $request) use ($app) {
     $alert = null;
     // If the form was submitted, process the input
@@ -92,7 +92,7 @@ $app->match('/hashtag', function (Request $request) use ($app) {
     ));
 });
 
-// Handle the add page
+// Handle the user request
 $app->match('/user', function (Request $request) use ($app) {
     $alert = null;
     // If the form was submitted, process the input
@@ -111,7 +111,7 @@ $app->match('/user', function (Request $request) use ($app) {
 
                 // Insert analysis data into DB
                 foreach ($analysisOut as $value){
-                  $sql = "INSERT INTO {$app['db.hashtagTable']} (analysisText, user) VALUES (:analysisText, :user)";
+                  $sql = "INSERT INTO {$app['db.userTable']} (analysisText, user) VALUES (:analysisText, :user)";
                   $query = $app['db']->prepare($sql);
                   $data = array(
                       ':analysisText' => $value,
