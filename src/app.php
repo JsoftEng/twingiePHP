@@ -41,7 +41,7 @@ $app->match('/', function () use ($app) {
     return $app['twig']->render('index.twig', array(
         'title'    => 'Twingie Analytics',
         'hashtagAnalytics' => $hashtagAnalytics,
-        'userAnalytics' =? $userAnalytics
+        'userAnalytics' => $userAnalytics
     ));
 });
 
@@ -96,6 +96,8 @@ $app->match('/hashtag', function (Request $request) use ($app) {
 $app->match('/user', function (Request $request) use ($app) {
     $alert = null;
     // If the form was submitted, process the input
+
+    /*TODO
     if ('GET' == $request->getMethod()) {
         try {
             // Make sure the photo was uploaded without error
@@ -132,6 +134,7 @@ $app->match('/user', function (Request $request) use ($app) {
             $alert = array('type' => 'error', 'message' => $e->getMessage());
         }
     }
+    */
 
     return $app['twig']->render('user.twig', array(
         'title' => 'Twitter Analytics',
