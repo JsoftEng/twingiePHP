@@ -1,12 +1,13 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/db-connect.php';
+//require __DIR__ . '/db-connect.php';
 
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Aws\DynamoDb\Exception\DynamoDbException;
 
 // Setup the application
 $app = new Application();
@@ -16,12 +17,20 @@ $app->register(new TwigServiceProvider, array(
 ));
 
 // Setup the database
-$app['db.hashtagTable'] = DB_HASHTAGTABLE;
-$app['db.userTable'] = DB_USERTABLE;
-$app['db.dsn'] = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
-$app['db'] = $app->share(function ($app) {
-    return new PDO($app['db.dsn'], DB_USER, DB_PASSWORD);
-});
+$sdk = new Aws\Sdk([
+  'endpoint' => 'dynamodb endpoint',
+  'region' => 'us-west-2',
+  'version' => 'latest'
+]);
+
+$dynamodb = $sdk->createDynamoDB();
+
+//$app['db.hashtagTable'] = DB_HASHTAGTABLE;
+//$app['db.userTable'] = DB_USERTABLE;
+//$app['db.dsn'] = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
+//$app['db'] = $app->share(function ($app) {
+//    return new PDO($app['db.dsn'], DB_USER, DB_PASSWORD);
+//});
 
 $app->error(function (\PDOException $e, $code) use ($app) {
   $alert = array('type' => 'error', 'message' => 'Can\'t connect to database. If you launched this application with AWS Elastic Beanstalk, please go to your Environment\'s Configuration page in the AWS Management Console and click \'create a new RDS database\' in the Data Tier section.');
@@ -41,6 +50,22 @@ $app->match('/', function () use ($app) {
     return $app['twig']->render('index.twig', array(
         'title'    => 'Twingie Analytics',
         'hashtagAnalytics' => $hashtagAnalytics,
+        'userAnalytics' => $userAnalytics
+    ));
+});
+
+//Handle test page
+$app->match('/dyna', function () use ($app) {
+    $params = [
+
+    ];
+    $result = $dynamodb->getItem([
+      'Key' => ''
+      'TableName' =>
+    ])
+    $dynamodb->
+    return $app['twig']->render('dyna.twig', array(
+        'title'    => 'Twingie Analytics',
         'userAnalytics' => $userAnalytics
     ));
 });
