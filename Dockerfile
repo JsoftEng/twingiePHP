@@ -8,9 +8,6 @@ RUN apt-get install -y git curl apache2 php5 libapache2-mod-php5 php5-mcrypt php
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/bin/composer
 
-# Install AWS SDK
-RUN php composer.phar require aws/aws-sdk-php
-
 # Install app
 RUN rm -rf /var/www/*
 ADD . /var/www
