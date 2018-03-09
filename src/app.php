@@ -31,7 +31,9 @@ $app->get('/analytics/hashtag/{context}',
             }
       }
 
-      return json_encode($result['Items'], JSON_FORCE_OBJECT);
+      return $response
+        -> withStatus(200)
+        -> withJson($result['Items']);
     }
 );
 
