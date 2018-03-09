@@ -2,10 +2,6 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-//use Silex\Application;
-//use Silex\Provider\TwigServiceProvider;
-//use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Component\HttpFoundation\Response;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Aws\Common\Aws;
@@ -35,7 +31,7 @@ $app->get('/analytics/hashtag/{context}',
             }
       }
 
-      return json_encode($result['Items']);
+      return json_encode($result['Items'], JSON_FORCE_OBJECT);
     }
 );
 
