@@ -22,22 +22,18 @@ $app->get('/analytics/hashtag/{context}',
       $yesterdayDate = strtotime('-1 day', $nowDate);
       $params = [
         'TableName' => 'frameworks',
-        'Limit' => 60,
+        'Limit' => 200,
         'KeyConditionExpression' => 'framework = :v_hash and unix_time between :v_range1 and :v_range2 ',
         'ExpressionAttributeValues' => array(
             ':v_hash' => array('S' => $context),
-            ':v_range1' => array('N' => $yesterdayDate),
-            ':v_range2' => array('N' => $nowDate)
+            ':v_range1' => array('N' => "1520631463"),
+            ':v_range2' => array('N' => "1520832463")
         )
       ];
       try{
         $result = $GLOBALS['g_client']->query($params);
       } catch(Exception $e){
-          if (strcmp($e->getMessage(),"Requested resource not found") == 0){
-            return "Spin up another listener for " . $context . "!";
-          } else{
-              return "Error: " . $e->getMessage();
-            }
+            return "Error: " . $e->getMessage();
       }
 
       return $response
