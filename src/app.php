@@ -111,15 +111,15 @@
   }
 
   function depositAnalysis($analysis, $twitterID){
-    $most_popular_tweet = 'most_popular_tweet',
-    $most_controversial_tweet = 'most_controversial_tweet',
-    $related_hashtag = 'related_hashtag',
-    $related_user = 'related_user',
-    $volume_line_graph = 'volume_line_graph',
-    $radar_graph = 'radar_graph',
-    $stream_graph = 'stream_graph',
-    $scatter_graph = 'scatter_graph',
-    $pie_graph = 'pie_graph',
+    $most_popular_tweet = 'most_popular_tweet';
+    $most_controversial_tweet = 'most_controversial_tweet';
+    $related_hashtag = 'related_hashtag';
+    $related_user = 'related_user';
+    $volume_line_graph = 'volume_line_graph';
+    $radar_graph = 'radar_graph';
+    $stream_graph = 'stream_graph';
+    $scatter_graph = 'scatter_graph';
+    $pie_graph = 'pie_graph';
 
     $params = [
       'TableName' => 'twingieSenators',
@@ -140,15 +140,15 @@
   }
 
   function getAnalysis($senator){
-    $most_popular_tweet = 'most_popular_tweet',
-    $most_controversial_tweet = 'most_controversial_tweet',
-    $related_hashtag = 'related_hashtag',
-    $related_user = 'related_user',
-    $volume_line_graph = 'volume_line_graph',
-    $radar_graph = 'radar_graph',
-    $stream_graph = 'stream_graph',
-    $scatter_graph = 'scatter_graph',
-    $pie_graph = 'pie_graph',
+    $most_popular_tweet = 'most_popular_tweet';
+    $most_controversial_tweet = 'most_controversial_tweet';
+    $related_hashtag = 'related_hashtag';
+    $related_user = 'related_user';
+    $volume_line_graph = 'volume_line_graph';
+    $radar_graph = 'radar_graph';
+    $stream_graph = 'stream_graph';
+    $scatter_graph = 'scatter_graph';
+    $pie_graph = 'pie_graph';
 
     $json = file_get_contents('http://twitter-user-evaluation-dev.us-east-1.elasticbeanstalk.com/?user='.$senator);
     $decodedJson = json_decode($json);
