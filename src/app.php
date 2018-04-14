@@ -111,12 +111,15 @@
   }
 
   function depositAnalysis($analysis, $twitterID){
-    $activity_by_interval = 'activity_by_interval';
-    $most_controversial_tweet = 'most_controversial_tweet';
-    $most_popular_tweet = 'most_popular_tweet';
-    $related_hashtag = '';
-    $related_user = '';
-    $sentiment = '';
+    $most_popular_tweet = 'most_popular_tweet',
+    $most_controversial_tweet = 'most_controversial_tweet',
+    $related_hashtag = 'related_hashtag',
+    $related_user = 'related_user',
+    $volume_line_graph = 'volume_line_graph',
+    $radar_graph = 'radar_graph',
+    $stream_graph = 'stream_graph',
+    $scatter_graph = 'scatter_graph',
+    $pie_graph = 'pie_graph',
 
     $params = [
       'TableName' => 'twingieSenators',
@@ -137,23 +140,29 @@
   }
 
   function getAnalysis($senator){
-    $activity_by_interval = 'activity_by_interval';
-    $most_controversial_tweet = 'most_controversial_tweet';
-    $most_popular_tweet = 'most_popular_tweet';
-    $related_hashtag = 'related_hashtag';
-    $related_user = 'related_user';
-    $sentiment = 'sentiment';
+    $most_popular_tweet = 'most_popular_tweet',
+    $most_controversial_tweet = 'most_controversial_tweet',
+    $related_hashtag = 'related_hashtag',
+    $related_user = 'related_user',
+    $volume_line_graph = 'volume_line_graph',
+    $radar_graph = 'radar_graph',
+    $stream_graph = 'stream_graph',
+    $scatter_graph = 'scatter_graph',
+    $pie_graph = 'pie_graph',
 
-    $json = file_get_contents('http://twingiems-dev.us-east-1.elasticbeanstalk.com/?user='.$senator);
+    $json = file_get_contents('http://twitter-user-evaluation-dev.us-east-1.elasticbeanstalk.com/?user='.$senator);
     $decodedJson = json_decode($json);
 
     $result = array(
-      'activity_by_interval' => $decodedJson->$activity_by_interval,
-      'most_controversial_tweet' => $decodedJson->$most_controversial_tweet,
       'most_popular_tweet' => $decodedJson->$most_popular_tweet,
+      'most_controversial_tweet' => $decodedJson->$most_controversial_tweet,
       'related_hashtag' => $decodedJson->$related_hashtag,
       'related_user' => $decodedJson->$related_user,
-      'sentiment' => $decodedJson->$sentiment
+      'volume_line_graph' => $decodedJson->$volume_line_graph,
+      'radar_graph' => $decodedJson->$radar_graph,
+      'stream_graph' => $decodedJson->$stream_graph,
+      'scatter_graph' => $decodedJson->$scatter_graph,
+      'pie_graph' => $decodedJson->$pie_graph,
     );
 
     return $result;
