@@ -58,7 +58,6 @@
   $app->get('/analytics/senator',
       function(Request $request, Response $response, array $args){
         $twitterID = $request->getQueryParam('twitterid');
-        $activity_by_interval = 'activity_by_interval';
 
         try{
           if (checkInterval()){
@@ -77,7 +76,6 @@
         return $response
           -> withStatus(200)
           -> withJson($result);
-          //-> withJson($result->$activity_by_interval);
       }
   );
 
@@ -97,7 +95,7 @@
   }
 
   function querySenator($twitterID){
-    //set up parametrs for querying senator db
+    //set up parameters for querying senator db
     $params = [
       'TableName' => 'twingieSenators',
       'KeyConditionExpression' => 'senatorID = :v_hash',
@@ -124,13 +122,11 @@
     $params = [
       'TableName' => 'twingieSenators',
       'Item' => array(
-        $twitterID => $GLOBALS['g_marshaler']->marshalItem($analysis['activity_by_interval'])
+        $twitterID => $GLOBALS['g_marshaler']->marshalJson($analysis)
       )
     ];
 
-    //var_dump($GLOBALS['g_marshaler']->marshalItem($analysis['activity_by_interval']));
-
-    //var_dump($GLOBALS['g_marshaler']->marshalItem($analysis));
+    var_dump($GLOBALS['g_marshaler']->marshalJson($analysis));
     //$GLOBALS['g_client']->putItem($params);
   }
 
@@ -148,7 +144,7 @@
     $radar_graph = 'radar_graph';
     $stream_graph = 'stream_graph';
     $scatter_graph = 'scatter_graph';
-    $pie_graph = 'pie_graph';
+    //$pie_graph = 'pie_graph';
 
     $json = file_get_contents('http://twitter-user-evaluation-dev.us-east-1.elasticbeanstalk.com/?user='.$senator);
     $decodedJson = json_decode($json);
@@ -161,11 +157,11 @@
       'volume_line_graph' => $decodedJson->$volume_line_graph,
       'radar_graph' => $decodedJson->$radar_graph,
       'stream_graph' => $decodedJson->$stream_graph,
-      'scatter_graph' => $decodedJson->$scatter_graph,
-      'pie_graph' => $decodedJson->$pie_graph,
+      'scatter_graph' => $decodedJson->$scatter_graph
+      //'pie_graph' => $decodedJson->$pie_graph,
     );
 
-    return $result;
+    return $decodedJson;
   }
 
   $app->run();
