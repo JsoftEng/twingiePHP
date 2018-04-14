@@ -11,6 +11,7 @@ RUN mv composer.phar /usr/bin/composer
 # Install app
 RUN rm -rf /var/www/*
 ADD . /var/www
+RUN cd /var/www && /usr/bin/composer update
 RUN  cd /var/www && /usr/bin/composer install
 
 # Configure apache
