@@ -63,8 +63,6 @@
 
         $depositTime = time();
 
-        echo $depositTime;
-
         return $response
           -> withStatus(200)
           -> withJson($result);
@@ -75,11 +73,12 @@
   $app->get('/analytics/senator',
       function(Request $request, Response $response, array $args){
         $twitterID = $request->getQueryParam('twitterid');
+        $last_updated = 'last_updated';
         $result = querySenator($twitterID);
 
         try{
           // check if data was updated in last 24 hours
-          if (!checkInterval($result[0]['last_updated']['N'])){
+          if (!checkInterval($result->$last_updated)){
             $analysisResult = getAnalysis($twitterID);
             depositAnalysis($analysisResult, $twitterID);
             $result = querySenator($twitterID);
@@ -114,7 +113,9 @@
 
     //query db
     $result = $GLOBALS['g_client']->query($params);
-    return $result['Items'];
+    $reformatedJSON = json_decode($GLOBALS['g_marshaler']->unmarshalJson($result['Items'][0]));
+
+    return $reformatedJSON;
   }
 
   /**
@@ -136,7 +137,10 @@
     ];
 
     $result = $GLOBALS['g_client']->query($params);
-    return $result['Items'];
+    $reformatedJSON = json_decode($GLOBALS['g_marshaler']->unmarshalJson($result['Items'][0]));
+    //var_dump(json_decode($GLOBALS['g_marshaler']->unmarshalJson($result['Items'][0])));
+
+    return $reformatedJSON;
   }
 
  /**
