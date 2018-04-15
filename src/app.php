@@ -63,9 +63,14 @@
 
         $depositTime = time();
 
-        return $response
-          -> withStatus(200)
-          -> withJson($result);
+        if ($result != null){
+          return $response
+            -> withStatus(200)
+            -> withJson($result);
+        }else{
+          return $response
+            -> withStatus(404);
+        }
       }
   );
 
@@ -113,6 +118,12 @@
 
     //query db
     $result = $GLOBALS['g_client']->query($params);
+    //check if state exists in db
+    if($result['Count'] == 0){
+      echo "Invalid state parameter!";
+      return null;
+    }
+
     $reformatedJSON = json_decode($GLOBALS['g_marshaler']->unmarshalJson($result['Items'][0]));
 
     return $reformatedJSON;
@@ -137,8 +148,14 @@
     ];
 
     $result = $GLOBALS['g_client']->query($params);
+    //check if senator exists in db
+    if($result['Count'] == 0){
+      $analysis = getAnalysis($twitterID);
+      depositAnalysis($analysis,$twitterID);
+      $result = $GLOBALS['g_client']->query($params);
+    }
+
     $reformatedJSON = json_decode($GLOBALS['g_marshaler']->unmarshalJson($result['Items'][0]));
-    //var_dump(json_decode($GLOBALS['g_marshaler']->unmarshalJson($result['Items'][0])));
 
     return $reformatedJSON;
   }
@@ -204,6 +221,18 @@
     }
 
     return $isWithinInterval;
+  }
+
+  /**
+  * Checks whether specified senator is valid
+  *
+  * @param string $senator senator to be validated
+  *
+  * @author John Johnson <jsofteng@gmail.com>
+  * @return boolean false if senator does not exist in state db (doesn't belong to any state)
+  **/
+  function validateSenator($senator){
+    //TODO
   }
 
   /**
