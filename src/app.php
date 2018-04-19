@@ -77,9 +77,11 @@
   // Handle senator analysis request
   $app->get('/analytics/senator',
       function(Request $request, Response $response, array $args){
+        $state = $request->getQueryParam('state');
         $twitterID = $request->getQueryParam('twitterid');
         $last_updated = 'last_updated';
-        if(validateSenator){
+
+        if(validateSenator($state,$twitterID)){
           $result = querySenator($twitterID);
         }else{
           return $response
@@ -237,7 +239,7 @@
   * @author John Johnson <jsofteng@gmail.com>
   * @return boolean false if senator does not exist in state db (doesn't belong to any state)
   **/
-  function validateSenator($senator){
+  function validateSenator($state,$twitterID){
     $isValid = true;
 
     $params = [
@@ -249,13 +251,13 @@
     ];
 
     $result = $GLOBALS['g_client']->query($params);
+    $senator = $result['Items'][0]['twitterID'];
 
-    if(){
+    if($senator != ('@'.$twitterID)){
       $isValid = false;
     }
 
     return $isValid;
-    //TODO
   }
 
   /**
@@ -266,8 +268,8 @@
   * @author John Johnson <jsofteng@gmail.com>
   * @return JSON
   **/
-  function getAnalysis($senator){
-    $json = file_get_contents('http://twitter-user-evaluation-dev.us-east-1.elasticbeanstalk.com/?user='.$senator);
+  function getAnalysis($twitterID){
+    $json = file_get_contents('http://twitter-user-evaluation-dev.us-east-1.elasticbeanstalk.com/?user='.$twitterID);
     $decodedJson = json_decode($json);
 
     return $decodedJson;
