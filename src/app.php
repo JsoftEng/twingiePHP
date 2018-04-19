@@ -79,7 +79,13 @@
       function(Request $request, Response $response, array $args){
         $twitterID = $request->getQueryParam('twitterid');
         $last_updated = 'last_updated';
-        $result = querySenator($twitterID);
+        if(validateSenator){
+          $result = querySenator($twitterID);
+        }else{
+          return $response
+            -> withStatus(400)
+            -> write("Senator does not exist!");
+        }
 
         try{
           // check if data was updated in last 24 hours
@@ -232,6 +238,23 @@
   * @return boolean false if senator does not exist in state db (doesn't belong to any state)
   **/
   function validateSenator($senator){
+    $isValid = true;
+
+    $params = [
+      'TableName' => 'twingieStates',
+      'KeyConditionExpression' => 'stateABV = :v_hash',
+      'ExpressionAttributeValues' => array(
+          ':v_hash' => array('S' => $state),
+      )
+    ];
+
+    $result = $GLOBALS['g_client']->query($params);
+
+    if(){
+      $isValid = false;
+    }
+
+    return $isValid;
     //TODO
   }
 
