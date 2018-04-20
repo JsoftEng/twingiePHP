@@ -26,6 +26,8 @@
   // Setup Database
   $g_aws = Aws::factory(__DIR__ . '/../config.php');
   $g_client = $g_aws->get('DynamoDb');
+
+  // Setup marshaler for JSON
   $g_marshaler = new Marshaler;
 
   // Enable CORS
@@ -69,7 +71,8 @@
             -> withJson($result);
         }else{
           return $response
-            -> withStatus(404);
+            -> withStatus(400)
+            -> write("State does not exist!");
         }
       }
   );
@@ -128,7 +131,6 @@
     $result = $GLOBALS['g_client']->query($params);
     //check if state exists in db
     if($result['Count'] == 0){
-      echo "Invalid state parameter!";
       return null;
     }
 
@@ -178,30 +180,19 @@
  * @return void
  **/
   function depositAnalysis($analysis, $twitterID){
-    $most_popular_tweet = 'most_popular_tweet';
-    $most_controversial_tweet = 'most_controversial_tweet';
-    $related_hashtag = 'related_hashtag';
-    $related_user = 'related_user';
-    $volume_line_graph = 'volume_line_graph';
-    $radar_graph = 'radar_graph';
-    $stream_graph = 'stream_graph';
-    $scatter_graph = 'scatter_graph';
-    $pie_graph = 'pie_graph';
-
     $depositTime = time();
 
     $data = array(
       'senatorID' => $twitterID,
-      'most_popular_tweet' => $analysis->$most_popular_tweet,
-      'most_controversial_tweet' => $analysis->$most_controversial_tweet,
-      'related_hashtag' => $analysis->$related_hashtag,
-      'related_user' => $analysis->$related_user,
-      'volume_line_graph' => $analysis->$volume_line_graph,
-      'radar_graph' => $analysis->$radar_graph,
-      'stream_graph' => $analysis->$stream_graph,
-      'scatter_graph' => $analysis->$scatter_graph,
+      'most_popular_tweet' => $analysis->most_popular_tweet,
+      'most_controversial_tweet' => $analysis->most_controversial_tweet,
+      'related_hashtag' => $analysis->related_hashtag,
+      'related_user' => $analysis->related_user,
+      'volume_line_graph' => $analysis->volume_line_graph,
+      'radar_graph' => $analysis->radar_graph,
+      'stream_graph' => $analysis->stream_graph,
+      'scatter_graph' => $analysis->scatter_graph,
       'last_updated' => $depositTime
-      //'pie_graph' => $analysis->$pie_graph
     );
 
     $params = [
@@ -240,7 +231,7 @@
   * @return boolean false if senator does not exist in state db (doesn't belong to any state)
   **/
   function validateSenator($state,$twitterID){
-    $isValid = true;
+    $isValid = false;
 
     $params = [
       'TableName' => 'twingieStates',
@@ -250,11 +241,19 @@
       )
     ];
 
-    $result = $GLOBALS['g_client']->query($params);
-    $senator = $result['Items'][0]['twitterID'];
+    $queryResult = $GLOBALS['g_client']->query($params)['Items'];
+    $queryArray = json_decode($GLOBALS['g_marshaler']->unmarshalJson($queryResult[0]), TRUE);
+    $senators = $queryArray['senators'];
+    $senatorKeys = array(
+      'senator_1' => array_keys($senators[0])[0],
+      'senator_2' => array_keys($senators[1])[0]
+    );
 
-    if($senator != ('@'.$twitterID)){
-      $isValid = false;
+    $senator_1 = $senators[0][$senatorKeys['senator_1']]['twitterID'];
+    $senator_2 = $senators[1][$senatorKeys['senator_2']]['twitterID'];
+
+    if(strtoupper($senator_1) == strtoupper(('@'.$twitterID)) || strtoupper($senator_2) == strtoupper(('@'.$twitterID))){
+      $isValid = true;
     }
 
     return $isValid;
