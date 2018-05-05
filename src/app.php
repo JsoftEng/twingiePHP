@@ -184,13 +184,10 @@
 
     $data = array(
       'senatorID' => $twitterID,
-      'most_popular_tweet' => $analysis->most_popular_tweet,
-      'most_controversial_tweet' => $analysis->most_controversial_tweet,
       'related_hashtag' => $analysis->related_hashtag,
       'related_user' => $analysis->related_user,
+      'named_entity_bar_graph' => $analysis->named_entity_bar_graph,
       'volume_line_graph' => $analysis->volume_line_graph,
-      'radar_graph' => $analysis->radar_graph,
-      'stream_graph' => $analysis->stream_graph,
       'scatter_graph' => $analysis->scatter_graph,
       'last_updated' => $depositTime
     );
